@@ -8,6 +8,10 @@
     "util",
     "database"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SugarSD/ticketer-js"
+  },
   "license": "ISC",
   "author": "SugarSD",
   "type": "module",
