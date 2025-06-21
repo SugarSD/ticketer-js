@@ -44,7 +44,7 @@ class Ticketer {
     constructor(store = new DefaultStore, statuses = TicketState) {
         this.store = store;
 
-        this.createTicket = (id, type, subject, description, state = TicketState.Active) => {
+        this.createTicket = (id, type, subject, description, state = statuses.Active) => {
             this.store.addTicket({id, title: type, subject, description, state});
         }
 
@@ -67,8 +67,8 @@ export default exports;
 
 //Test
 
-let ticketer = new Ticketer();
+/*let ticketer = new Ticketer();
 
 ticketer.createTicket("1", "PHONE", "Phone won't start up.", "I've been trying to start my phone for the last 8 hours and it just won't turn on for some reason!");
 ticketer.editTicket("1", {type: "PC", state: TicketState.InProgress});
-ticketer.deleteTicket("1");
+ticketer.deleteTicket("1");*/
