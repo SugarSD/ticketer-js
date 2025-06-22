@@ -1,6 +1,6 @@
 {
   "name": "ticketer-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility library for making support ticket logic more concise.",
   "keywords": [
     "ticket",
