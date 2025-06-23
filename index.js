@@ -58,9 +58,9 @@ class Ticketer {
     }
 }
 
-const exportables = {
+const lib = {
     Ticketer,
     TicketState
 }
 
-module.exports = exportables;
+module.exports = lib;
