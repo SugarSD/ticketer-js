@@ -28,12 +28,13 @@ class DefaultStore {
             }
         }
 
-        this.edit = (id, data) => {
-            let ticketIndex = this.store.tickets.findIndex(e => e.id === id);
+        this.edit = (ticket) => {
+            if (ticket.id === undefined) throw new Error(`Attempted to edit a ticket without passing an ID.`);
+            let ticketIndex = this.store.tickets.findIndex(e => e.id === ticket.id);
             if (ticketIndex >= 0) {
-                Object.assign(this.store.tickets[ticketIndex], data);
+                Object.assign(this.store.tickets[ticketIndex], ticket);
             } else {
-                throw new Error(`Attempt to edit ticket that couldn't be found with ID: ${id}`);
+                throw new Error(`Attempt to edit ticket that couldn't be found with ID: ${ticket.id}`);
             }
         }
 
@@ -77,20 +78,52 @@ class TicketerStore {
     }
 }
 
+class TicketerBuilder {
+    constructor() {
+        this._data = {}
+
+        this.id = (id) => {
+            this._data.id = id;
+            return this;
+        }
+
+        this.type = (type) => {
+            this._data.type = type;
+            return this;
+        }
+
+        this.subject = (subject) => {
+            this._data.subject = subject;
+            return this;
+        }
+
+        this.details = (details) => {
+            this._data.details = details;
+            return this;
+        }
+
+        this.state = (state) => {
+            this._data.state = state;
+            return this;
+        }
+    }
+}
+
 class Ticketer {
     constructor(store = new DefaultStore, status = TicketState) {
         this.store = store;
 
-        this.createTicket = (id, type, subject, details, state = status.Active) => {
-            this.store.create({id, type, subject, details, state});
+        this.createTicket = (ticket) => {
+            ticket._data.state ? null : ticket._data.state = TicketState.Active;
+            this.store.create(ticket._data);
         }
 
         this.deleteTicket = (id) => {
             this.store.delete(id);
         }
 
-        this.editTicket = (id, data) => {
-            this.store.edit(id, data);
+        this.editTicket = (ticket) => {
+            this.store.edit(ticket._data);
         }
 
         this.readTicket = (id) => {
@@ -100,9 +133,10 @@ class Ticketer {
 }
 
 const lib = {
+    TicketState,
     Ticketer,
     TicketerStore,
-    TicketState
+    TicketerBuilder
 }
 
 module.exports = lib;
