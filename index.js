@@ -114,7 +114,7 @@ class Ticketer {
         this.store = store;
 
         this.createTicket = (ticket) => {
-            ticket._data.state ? null : ticket._data.state = TicketState.Active;
+            ticket._data.state ? null : ticket._data.state = status.Active;
             this.store.create(ticket._data);
         }
 
