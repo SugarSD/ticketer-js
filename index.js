@@ -14,8 +14,10 @@ const checkType = (called, expected, passed) => {
 class DefaultStore {
     constructor() {
         this.store = {tickets: []}
+        this.states = TicketState;
 
         this.create = (data) => {
+            if (this.store.tickets.find(e => e.id = data.id)) throw new Error(`Attempt to create ticket with an already taken ID: "${data.id}"`);
             this.store.tickets.push(data);
         }
 
@@ -55,25 +57,35 @@ class TicketerStore {
         this.delete = null;
         this.edit = null;
         this.read = null;
+        this.states = TicketState;
 
         this.onCreate = (fn) => {
             checkType("TicketerBuilder.onCreate()", "function", typeof fn);
             this.create = fn;
+            return this;
         }
 
         this.onDelete = (fn) => {
             checkType("TicketerBuilder.onDelete()", "function", typeof fn);
             this.delete = fn;
+            return this;
         }
 
         this.onEdit = (fn) => {
             checkType("TicketerBuilder.onEdit()", "function", typeof fn);
             this.edit = fn;
+            return this;
         }
 
         this.onRead = (fn) => {
             checkType("TicketBuilder.onRead()", "function", typeof fn);
             this.read = fn;
+            return this;
+        }
+
+        this.configure = (options) => {
+            if (options.states) this.states = options.states;
+            return this;
         }
     }
 }
@@ -110,20 +122,20 @@ class TicketerBuilder {
 }
 
 class Ticketer {
-    constructor(store = new DefaultStore, status = TicketState) {
+    constructor(store = new DefaultStore()) {
         this.store = store;
 
         this.createTicket = (ticket) => {
-            ticket._data.state ? null : ticket._data.state = status.Active;
-            this.store.create(ticket._data);
+            ticket._data.state ? null : ticket._data.state = this.store.states.Active;
+            return this.store.create(ticket._data);
         }
 
         this.deleteTicket = (id) => {
-            this.store.delete(id);
+            return this.store.delete(id);
         }
 
         this.editTicket = (ticket) => {
-            this.store.edit(ticket._data);
+            return this.store.edit(ticket._data);
         }
 
         this.readTicket = (id) => {
